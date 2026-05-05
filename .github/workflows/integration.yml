@@ -1,0 +1,57 @@
+name: Integration Tests
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+     matrix:
+       node-version: [18.x, 20.x, 22.x]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: use node.js ${{ matrix.node-version }}
+
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - name: "install dependencies"
+        run: npm i
+
+      - name: "build integration tests"
+        run: npm run build
+
+  unit-test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+     matrix:
+       node-version: [18.x, 20.x, 22.x]
+
+    steps:
+     - uses: actions/checkout@v4
+     - name: use node.js ${{ matrix.node-version }}
+       uses: actions/setup-node@v3
+       with:
+         node-version: ${{ matrix.node-version }}
+         cache: 'npm'
+     - name: "install dependencies"
+       run: npm i
+
+     - name: "run unit tests"
+       run: npm run test
+
+
+
+
+
+
+
